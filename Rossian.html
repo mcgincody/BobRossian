@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+    <head> 
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+            <canvas id="Rossian" width="720" height="720" style="border:1px solid #000000;"></canvas>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                        var canvas = document.getElementById("Rossian");
+                        var pointer = canvas.getContext("2d");
+                        var size = 600;
+                        var quantity = 60;
+                        var degrees = 360/quantity;
+                        pointer.beginPath();
+                        pointer.arc(360,360,Math.round(600/Math.sqrt(3)),0,2*Math.PI);
+                        pointer.stroke();
+                        //eqtriangle(pointer, 600, 360,360);
+                        for(i = 0; i < quantity; i++){
+                                if(i%2==1){
+                                        //pointer.strokeStyle="red"; 
+                                        pointer.fillStyle="blue";
+                                        eqtriangleRotate(pointer, size - (size/quantity)*i, 360, 360, degrees*i);
+                                } else {
+                                        //pointer.strokeStyle="red"; 
+                                        pointer.fillStyle="#000000";
+                                        eqtriangleRotate(pointer, size - (size/quantity)*i, 360, 360, (degrees*i)-180); 
+                                }
+                                //console.log(pointer.fillStyle);                                                               
+                        }                    
+                });
+
+                function eqtriangle(pointer, sidelength,centerX,centerY){
+                        pointer.beginPath();
+                        var upperHeight = Math.round(sidelength/Math.sqrt(3));
+                        var lowerHeight = Math.round(upperHeight/2);
+                        console.log(lowerHeight);
+                        console.log(upperHeight);
+                        pointer.moveTo(centerX, centerY - upperHeight);
+                        pointer.lineTo(centerX + (sidelength * .5), centerY + lowerHeight);
+                        pointer.lineTo(centerX - (sidelength * .5), centerY + lowerHeight);
+                        pointer.fill();
+                };
+
+                function eqtriangleRotate(pointer, sidelength, centerX, centerY, rotation){
+                        pointer.beginPath();
+                        var upperHeight = Math.round(sidelength/Math.sqrt(3));
+                        var lowerHeight = Math.round(upperHeight/2);
+                        var changeInX = Math.round(upperHeight*Math.sin(rotation*Math.PI/180));
+                        var changeInY = (upperHeight - Math.round(upperHeight*Math.cos(rotation*Math.PI/180)));
+                        console.log(changeInX);
+                        console.log(changeInY);
+                        //pointer.moveTo(centerX, centerY);
+                        pointer.moveTo(centerX + changeInX, centerY-upperHeight+changeInY);
+                        changeInX = Math.round(upperHeight*Math.sin((rotation+120)*Math.PI/180));
+                        changeInY = (upperHeight - Math.round(upperHeight*Math.cos((rotation+120)*Math.PI/180)));
+                        console.log(changeInX);
+                        console.log(changeInY);
+                        pointer.lineTo(centerX + changeInX, centerY-upperHeight+changeInY);
+                        changeInX = Math.round(upperHeight*Math.sin((rotation+240)*Math.PI/180));
+                        changeInY = (upperHeight - Math.round(upperHeight*Math.cos((rotation+240)*Math.PI/180)));
+                        console.log(changeInX);
+                        console.log(changeInY);
+                        pointer.lineTo(centerX + changeInX, centerY-upperHeight+changeInY);
+                        //pointer.lineTo(centerX - (sidelength/2)+changeInY, centerY + lowerHeight - changeInX)
+                        pointer.fill();
+                };
+            </script>
+    </body>
+</html>
