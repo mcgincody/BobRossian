@@ -4,30 +4,61 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <body>
-            <canvas id="Rossian" width="720" height="720" style="border:1px solid #000000;"></canvas>
+            <canvas id="Rossian"></canvas>
             <script type="text/javascript">
                 $(document).ready(function(){
                         var canvas = document.getElementById("Rossian");
                         var pointer = canvas.getContext("2d");
-                        var size = 600;
-                        var quantity = 60;
-                        var degrees = 360/quantity;
-                        pointer.beginPath();
-                        pointer.arc(360,360,Math.round(600/Math.sqrt(3)),0,2*Math.PI);
-                        pointer.stroke();
+                        pointer.canvas.width = window.innerWidth;
+                        pointer.canvas.height = window.innerHeight;
+                        var size = window.innerHeight*4/6;
+                        var quantity = 120*4;
+                        var degrees = 0.25;
+                        var colors = ["#ff6666", "#ff8c66", "#ffb366", "#ffd966", "#ffff66", "#d9ff66", "#b3ff66", "#8cff66",
+                                 "#66ff66", "#66ff8c", "#66ffb3", "#66ffd9", "#66ffff", "#66d9ff", "#66b3ff", "#668cff", "#6666ff", 
+                                 "#8c66ff", "#b366ff", "#d966ff", "#ff66ff", "#ff66d9", "#ff66b3", "#ff668c"];
+                        /*triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*3/6, colors, 0);
+                        triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*3/6, colors, 180);
+                        triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*3/6, colors, 90);
+                        triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*3/6, colors, 270);
+                        //centerLine(pointer, 0, 0, window.innerWidth, window.innerHeight, 500, 36, colors);*/
                         //eqtriangle(pointer, 600, 360,360);
-                        for(i = 0; i < quantity; i++){
+                        /*for(i = 0; i < quantity; i++){
+                                
+                                pointer.fillStyle=colors[(1*i+1)%colors.length];
                                 if(i%2==1){
-                                        //pointer.strokeStyle="red"; 
-                                        pointer.fillStyle="blue";
-                                        eqtriangleRotate(pointer, size - (size/quantity)*i, 360, 360, degrees*i);
+                                        eqtriangleRotate(pointer, size - (size/quantity)*i, window.innerWidth/2, window.innerHeight/2, (degrees*i)-degrees);
                                 } else {
-                                        //pointer.strokeStyle="red"; 
-                                        pointer.fillStyle="#000000";
-                                        eqtriangleRotate(pointer, size - (size/quantity)*i, 360, 360, (degrees*i)-180); 
+                                        eqtriangleRotate(pointer, size - (size/quantity)*i, window.innerWidth/2, window.innerHeight/2, (degrees*i)-180); 
                                 }
                                 //console.log(pointer.fillStyle);                                                               
-                        }                    
+                        }*/
+                        pointer.fillStyle = "black";
+                        pointer.beginPath();
+                        pointer.rect(0, 0, window.innerWidth, window.innerHeight);
+                        pointer.fill();
+                        /*for (j = 0; j < quantity ; j++){
+                                if (j % 4 == 0){
+                                        //triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*16/8 - (window.innerHeight*8/8/quantity)*j, colors, degrees*(j));
+                                } else if (j % 4 == 1){
+                                        triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*8/8 - (window.innerHeight*1/64/quantity)*j, colors, degrees*(j));
+                                } else if (j % 4 == 2){
+                                        triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*4/8 - (window.innerHeight*1/128/quantity)*j, colors, degrees*(j));
+                                } else {
+                                        triangleOfTriangles(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight*2/8 , colors, degrees*(j));
+                                }
+                        }  
+                        pointer.fillStyle = "white";
+                        eqtriangleRotate(pointer, window.innerHeight*1/11, window.innerWidth/2, window.innerHeight/2, 0); */ 
+                        for (j = 15; j <= 50; j++){
+                                pointer.fillStyle = colors[j%colors.length];
+                                console.log(j);
+                                equalFill(pointer, window.innerWidth/2, window.innerHeight/2, 2000-40*j, 360/50*j, 6);
+                                for (k = 0; k < 2; k++){
+                                        equalFill(pointer, window.innerWidth/2, window.innerHeight/2, 2000-1900/50*j, 360/6+k*180+360/50*j, 3);
+                                }
+                        }
+                                       
                 });
 
                 function eqtriangle(pointer, sidelength,centerX,centerY){
@@ -45,26 +76,65 @@
                 function eqtriangleRotate(pointer, sidelength, centerX, centerY, rotation){
                         pointer.beginPath();
                         var upperHeight = Math.round(sidelength/Math.sqrt(3));
-                        var lowerHeight = Math.round(upperHeight/2);
                         var changeInX = Math.round(upperHeight*Math.sin(rotation*Math.PI/180));
                         var changeInY = (upperHeight - Math.round(upperHeight*Math.cos(rotation*Math.PI/180)));
-                        console.log(changeInX);
-                        console.log(changeInY);
-                        //pointer.moveTo(centerX, centerY);
                         pointer.moveTo(centerX + changeInX, centerY-upperHeight+changeInY);
                         changeInX = Math.round(upperHeight*Math.sin((rotation+120)*Math.PI/180));
                         changeInY = (upperHeight - Math.round(upperHeight*Math.cos((rotation+120)*Math.PI/180)));
-                        console.log(changeInX);
-                        console.log(changeInY);
                         pointer.lineTo(centerX + changeInX, centerY-upperHeight+changeInY);
                         changeInX = Math.round(upperHeight*Math.sin((rotation+240)*Math.PI/180));
                         changeInY = (upperHeight - Math.round(upperHeight*Math.cos((rotation+240)*Math.PI/180)));
-                        console.log(changeInX);
-                        console.log(changeInY);
                         pointer.lineTo(centerX + changeInX, centerY-upperHeight+changeInY);
-                        //pointer.lineTo(centerX - (sidelength/2)+changeInY, centerY + lowerHeight - changeInX)
                         pointer.fill();
                 };
+
+                function centerLine(pointer, x1, y1 ,x2, y2, size, quantity, colors){
+                        changeInX = (x2-x1)/quantity;
+                        changeInY = (y2-y1)/quantity;
+                        rotation = 360/quantity;
+                        for (i = 0; i < quantity; i++){
+                                pointer.fillStyle=colors[(i)%colors.length];
+                                eqtriangleRotate(pointer, size, x1+changeInX*i, y1+changeInY*i, rotation*i);
+                        }
+                }
+
+                function triangleOfTriangles(pointer, centerX, centerY, sidelength, colors, rotation){
+                        var upperHeight = Math.round(sidelength/Math.sqrt(3));
+                        var size = 16;
+                        var changeInX = Math.round(upperHeight*Math.sin(rotation*Math.PI/180));
+                        var changeInY = (upperHeight - Math.round(upperHeight*Math.cos(rotation*Math.PI/180)));
+                        var x1 = centerX + changeInX;
+                        var y1 = centerY-upperHeight+changeInY;
+                        changeInX = Math.round(upperHeight*Math.sin((rotation+120)*Math.PI/180));
+                        changeInY = (upperHeight - Math.round(upperHeight*Math.cos((rotation+120)*Math.PI/180)));
+                        var x2 = centerX + changeInX;
+                        var y2 = centerY-upperHeight+changeInY;
+                        var quantity = colors.length*4;
+                        console.log(x1 + " " + y1 + " " + x2 + " " + y2);
+                        centerLine(pointer, x1, y1, x2, y2, size, quantity, colors);
+                        changeInX = Math.round(upperHeight*Math.sin((rotation+240)*Math.PI/180));
+                        changeInY = (upperHeight - Math.round(upperHeight*Math.cos((rotation+240)*Math.PI/180)));
+                        var x3 = centerX + changeInX;
+                        var y3 = centerY-upperHeight+changeInY;
+                        centerLine(pointer, x2, y2, x3, y3, size, quantity, colors);
+                        centerLine(pointer, x3, y3, x1, y1, size, quantity, colors);
+                }
+
+                function equalFill(pointer, centerX, centerY, length, rotation, nSides){
+                        var x1 = centerX + Math.round(length*Math.sin(rotation*Math.PI/180));
+                        var y1 = centerY - length + (length - Math.round(length*Math.cos(rotation*Math.PI/180)));
+                        pointer.moveTo(x1,y1);
+                        //console.log(x1 + " " + y1);
+                        var degrees = 360 / nSides;
+                        pointer.beginPath();
+                        for (i = 0; i < nSides; i++){
+                                x1 = centerX + Math.round(length*Math.sin((rotation+degrees*i)*Math.PI/180));
+                                y1 = centerY - length + (length - Math.round(length*Math.cos((rotation+degrees*i)*Math.PI/180)));
+                                pointer.lineTo(x1,y1);
+                                //console.log(x1 + " " + y1);
+                        }
+                        pointer.fill();
+                }
             </script>
     </body>
 </html>
