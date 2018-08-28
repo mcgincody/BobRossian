@@ -2,6 +2,7 @@
 <html>
     <head> 
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <meta charset="utf-8"/>
     </head>
     <body>
             <canvas id="Rossian"></canvas>
@@ -11,54 +12,38 @@
                         var pointer = canvas.getContext("2d");
                         pointer.canvas.width = window.innerWidth;
                         pointer.canvas.height = window.innerHeight;
-                        var size = 7000;
-                        var quantity = 8000;
-                        var degrees = 360/90;
+                        
                         var colors = ["#ff6666", "#ff8c66", "#ffb366", "#ffd966", "#ffff66", "#d9ff66", "#b3ff66", "#8cff66",
                                  "#66ff66", "#66ff8c", "#66ffb3", "#66ffd9", "#66ffff", "#66d9ff", "#66b3ff", "#668cff", "#6666ff", 
                                  "#8c66ff", "#b366ff", "#d966ff", "#ff66ff", "#ff66d9", "#ff66b3", "#ff668c"];
+                        
+                        var size = 3000;
+                        var quantity = colors.length*10;
+                        var degrees = 360/quantity;
                         pointer.fillStyle = "black";
                         pointer.beginPath();
                         pointer.rect(0, 0, window.innerWidth, window.innerHeight);
-                        pointer.fill();
-                        
-                        degrees = 1;
-                        for (b = quantity-1000; b < quantity; b++){
-                                var scale = size - size/quantity*b;
-                                var x = Math.round(scale*Math.sin((degrees*b)*Math.PI/180));
-                                var y = (scale - Math.round(scale*Math.cos(degrees*b*Math.PI/180)));
-                                if (b%4 == 0){
-                                        shapeOfShapes(pointer, window.innerWidth/2+x, 
-                                        window.innerHeight/2+(-y+scale)/(b%3+2), 18, 4, 5, 3, colors.length, degrees*b, ["yellow"]);
-                                }  
-                                                             
-                                //console.log(window.innerHeight/2+ "-" +y);
+                        pointer.fill(); 
+                        for (i = 0; i < quantity; i++){
+                                var x = window.innerWidth/2 + Math.round(size*Math.sin((degrees*i)*Math.PI/180));
+                                var y = window.innerHeight/2 - size + (size - Math.round(size*Math.cos((degrees*i)*Math.PI/180)));
+                                pointer.fillStyle = colors[i%colors.length];
+                                unequalFill(pointer, x, y, [0,0, size*2/3, (size*2*Math.PI)/quantity,30,0,0,0], degrees*i+180);
+                                pointer.fillStyle = "red";
+                                equalFill(pointer, x, y, 10, 3, 0);
                         }
-
-                        degrees = 360/90;
-                        for (b = 0; b < quantity-1000; b++){
-                                var scale = size - size/quantity*b;
-                                var x = Math.round(scale*Math.sin((degrees*b)*Math.PI/180));
-                                var y = (scale - Math.round(scale*Math.cos(degrees*b*Math.PI/180)));
-                                if (b%1 == 0){
-                                        shapeOfShapes(pointer, window.innerWidth/2+x, 
-                                        window.innerHeight/2+(-y+scale)/(b%3+2), 18, 4, 5, 3, colors.length, degrees*b, ["white"]);
-                                }  
-                                                             
-                                //console.log(window.innerHeight/2+ "-" +y);
-                        }
+                       
+                        pointer.fillStyle = "red";
+                        equalFill(pointer, window.innerWidth/2, window.innerHeight/2, 10, 3, 0);
                         
-                                               
-                                       
                 });
 
                 function equalFill(pointer, centerX, centerY, length, nSides, rotation){
-                        var x1 = centerX + Math.round(length*Math.sin(rotation*Math.PI/180));
-                        var y1 = centerY - length + (length - Math.round(length*Math.cos(rotation*Math.PI/180)));
-                        pointer.moveTo(x1,y1);
+                        var x1, y1;
+                        pointer.moveTo(centerX,centerY);
                         var degrees = 360 / nSides;
                         pointer.beginPath();
-                        for (j = 1; j <= nSides; j++){
+                        for (j = 0; j < nSides; j++){
                                 x1 = centerX + Math.round(length*Math.sin((rotation+degrees*j)*Math.PI/180));
                                 y1 = centerY - length + (length - Math.round(length*Math.cos((rotation+degrees*j)*Math.PI/180)));
                                 pointer.lineTo(x1,y1);
@@ -66,7 +51,10 @@
                         pointer.fill();
                 }
                 
-                function centerLine(pointer, x1, y1 ,x2, y2, sLength, sNSides, quantity, colors){
+                function centerLine(pointer, x1, y1 ,x2, y2, sLength, sNSides, quantity){
+                        var colors = ["#ff6666", "#ff8c66", "#ffb366", "#ffd966", "#ffff66", "#d9ff66", "#b3ff66", "#8cff66",
+                                 "#66ff66", "#66ff8c", "#66ffb3", "#66ffd9", "#66ffff", "#66d9ff", "#66b3ff", "#668cff", "#6666ff", 
+                                 "#8c66ff", "#b366ff", "#d966ff", "#ff66ff", "#ff66d9", "#ff66b3", "#ff668c"];
                         changeInX = (x2-x1)/quantity;
                         changeInY = (y2-y1)/quantity;
                         rotation = 360/quantity;
@@ -76,7 +64,7 @@
                         }
                 }
 
-                function shapeOfShapes(pointer, centerX, centerY, length, nSides, sLength, sNSides, quantity, rotation, colors){
+                function shapeOfShapes(pointer, centerX, centerY, length, nSides, sLength, sNSides, quantity, rotation){
                         var x1 = centerX + Math.round(length*Math.sin(rotation*Math.PI/180));
                         var y1 = centerY - length + (length - Math.round(length*Math.cos(rotation*Math.PI/180)));
                         pointer.moveTo(x1,y1);
@@ -86,10 +74,27 @@
                         for (k = 1; k <= nSides; k++){
                                 x2 = centerX + Math.round(length*Math.sin((rotation+degrees*k)*Math.PI/180));
                                 y2 = centerY - length + (length - Math.round(length*Math.cos((rotation+degrees*k)*Math.PI/180)));
-                                centerLine(pointer, x1, y1, x2, y2, sLength, sNSides, quantity, colors);
+                                centerLine(pointer, x1, y1, x2, y2, sLength, sNSides, quantity);
                                 x1 = x2;
                                 y1 = y2;
                         }
+                }
+                
+                function unequalFill(pointer, centerX, centerY, lengths, rotation){
+                        var x1, y1;
+                        pointer.moveTo(centerX, centerY);
+                        var degrees = 360 / lengths.length;
+                        pointer.beginPath();
+                        for (l = 0; l < lengths.length; l++){
+                                x1 = centerX + Math.round(lengths[l]*Math.sin((rotation+degrees*l)*Math.PI/180));
+                                y1 = centerY - lengths[l] + (lengths[l] - Math.round(lengths[l]*Math.cos((rotation+degrees*l)*Math.PI/180)));
+                                pointer.lineTo(x1,y1);
+                        }
+                        pointer.fill(); 
+                }
+
+                function mountains(){
+                        
                 }
             </script>
     </body>
