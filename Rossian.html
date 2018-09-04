@@ -5,10 +5,10 @@
         <meta charset="utf-8"/>
     </head>
     <body>
-            <canvas id="Rossian"></canvas>
+            <canvas id="Rossian1" position=absolute left=0px top=0px></canvas>
             <script type="text/javascript">
                 $(document).ready(function(){
-                        var canvas = document.getElementById("Rossian");
+                        var canvas = document.getElementById("Rossian1");
                         var pointer = canvas.getContext("2d");
                         pointer.canvas.width = window.innerWidth;
                         pointer.canvas.height = window.innerHeight;
@@ -17,24 +17,23 @@
                                  "#66ff66", "#66ff8c", "#66ffb3", "#66ffd9", "#66ffff", "#66d9ff", "#66b3ff", "#668cff", "#6666ff", 
                                  "#8c66ff", "#b366ff", "#d966ff", "#ff66ff", "#ff66d9", "#ff66b3", "#ff668c"];
                         
-                        var size = 3000;
-                        var quantity = colors.length*10;
-                        var degrees = 360/quantity;
-                        pointer.fillStyle = "black";
-                        pointer.beginPath();
-                        pointer.rect(0, 0, window.innerWidth, window.innerHeight);
-                        pointer.fill(); 
-                        for (i = 0; i < quantity; i++){
-                                var x = window.innerWidth/2 + Math.round(size*Math.sin((degrees*i)*Math.PI/180));
-                                var y = window.innerHeight/2 - size + (size - Math.round(size*Math.cos((degrees*i)*Math.PI/180)));
-                                pointer.fillStyle = colors[i%colors.length];
-                                unequalFill(pointer, x, y, [0,0, size*2/3, (size*2*Math.PI)/quantity,30,0,0,0], degrees*i+180);
-                                pointer.fillStyle = "red";
-                                equalFill(pointer, x, y, 10, 3, 0);
+                        var start = null;
+
+                        function step(timestamp){
+                                if (!start) start = timestamp;
+                                var progress = timestamp - start;
+                                pointer.fillStyle = "black";
+                                pointer.beginPath();
+                                pointer.rect(0, 0, window.innerWidth, window.innerHeight);
+                                pointer.fill(); 
+                                shapeOfShapes(pointer, window.innerWidth/2, window.innerHeight/2, 1500, 9, 100, 3, 5, progress/32);
+                                shapeOfShapes(pointer, window.innerWidth/2, window.innerHeight/2, 1000, 6, 100, 3, 5, progress/16);
+                                shapeOfShapes(pointer, window.innerWidth/2, window.innerHeight/2, 500, 3, 100, 3, 5, progress/8);
+                                window.requestAnimationFrame(step);
+                                
                         }
-                       
-                        pointer.fillStyle = "red";
-                        equalFill(pointer, window.innerWidth/2, window.innerHeight/2, 10, 3, 0);
+
+                        window.requestAnimationFrame(step);
                         
                 });
 
@@ -93,9 +92,7 @@
                         pointer.fill(); 
                 }
 
-                function mountains(){
-                        
-                }
+                
             </script>
     </body>
 </html>
