@@ -17,20 +17,23 @@
                                  "#66ff66", "#66ff8c", "#66ffb3", "#66ffd9", "#66ffff", "#66d9ff", "#66b3ff", "#668cff", "#6666ff", 
                                  "#8c66ff", "#b366ff", "#d966ff", "#ff66ff", "#ff66d9", "#ff66b3", "#ff668c"];
                         
-                        var start = null;
+                        var start = 1;
 
-                        function step(timestamp){
-                                if (!start) start = timestamp;
-                                var progress = timestamp - start;
+                        function step(){
                                 pointer.fillStyle = "black";
                                 pointer.beginPath();
                                 pointer.rect(0, 0, window.innerWidth, window.innerHeight);
                                 pointer.fill(); 
-                                shapeOfShapes(pointer, window.innerWidth/2, window.innerHeight/2, 1500, 9, 100, 3, 5, progress/32);
-                                shapeOfShapes(pointer, window.innerWidth/2, window.innerHeight/2, 1000, 6, 100, 3, 5, progress/16);
-                                shapeOfShapes(pointer, window.innerWidth/2, window.innerHeight/2, 500, 3, 100, 3, 5, progress/8);
-                                window.requestAnimationFrame(step);
+                                for (b = 100; b > 5; b--){
+                                        if(b%1==0){
+                                                shapeOfShapes(pointer, window.innerWidth/2, window.innerHeight/2, window.innerHeight/100*b, 20, 10, 5, (b%5), start-b/2);
+                                        }
+                                }
                                 
+                                start++;
+                                
+                                window.requestAnimationFrame(step);
+                               
                         }
 
                         window.requestAnimationFrame(step);
@@ -58,8 +61,10 @@
                         changeInY = (y2-y1)/quantity;
                         rotation = 360/quantity;
                         for (i = 0; i < quantity; i++){
-                                pointer.fillStyle = colors[(i) % colors.length];
-                                equalFill(pointer, x1+changeInX*i, y1+changeInY*i, sLength, sNSides, rotation*i);
+                                if (i % 1 == 0){
+                                        pointer.fillStyle = colors[(i) % colors.length];
+                                        equalFill(pointer, x1+changeInX*i, y1+changeInY*i, sLength, sNSides, rotation*i);
+                                }                                
                         }
                 }
 
