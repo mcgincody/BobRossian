@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html>
+    <head> 
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <meta charset="utf-8"/>
+    </head>
+    <body>
+            <canvas id="Background" style="position:absolute; left:0px; top:0px; z-index:0;"></canvas>
+            <canvas id="StarField" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
+            <canvas id="Foreground" style="position:absolute; left:0px; top:0px; z-index:2;"></canvas>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                        //Constants and initial setup of the canvas
+                        var background = document.getElementById("Background");
+                        var pointerB = background.getContext("2d");
+                        var foreground = document.getElementById("Foreground");
+                        var pointerF = foreground.getContext("2d");
+                        var starField = document.getElementById("StarField");
+                        var pointerS = starField.getContext("2d");
+                        var date = new Date();
+                        var colors = ["#ff6666", "#ff8c66", "#ffb366", "#ffd966", "#ffff66", "#d9ff66", "#b3ff66", "#8cff66",
+                                 "#66ff66", "#66ff8c", "#66ffb3", "#66ffd9", "#66ffff", "#66d9ff", "#66b3ff", "#668cff", "#6666ff", 
+                                 "#8c66ff", "#b366ff", "#d966ff", "#ff66ff", "#ff66d9", "#ff66b3", "#ff668c"];
+                        pointerB.canvas.width = window.innerWidth;
+                        pointerB.canvas.height = window.innerHeight;
+                        
+                        /*UnequalFill allows you to make a shape that has different lengths originating from the origin
+                        //Inputs: 
+                            centerX is the x cords for the origin of the shape 
+                            centerY is the y cords for the origin of the shape
+                            lengths is an array of values that determine the corners of the shape and will equal degrees between them.
+                                each element is the distance from the origin starting from the y axis and moving clock-wise.
+                            rotation is the degrees of rotation between the first length and the y axis; rotating in clock-wise fashion
+                          Outputs:
+                            a filled shape with the number of sides equal to the size of lengths
+                            */
+                        function unequalFill(centerX, centerY, lengths, rotation){
+                            var x1, y1;
+                            pointerB.moveTo(centerX, centerY);
+                            var degrees = 360 / lengths.length;
+                            pointerB.beginPath();
+                            for (l = 0; l < lengths.length; l++){
+                                x1 = centerX + Math.round(lengths[l]*Math.sin((rotation+degrees*l)*Math.PI/180));
+                                y1 = centerY - lengths[l] + (lengths[l] - Math.round(lengths[l]*Math.cos((rotation+degrees*l)*Math.PI/180)));
+                                pointerB.lineTo(x1,y1);
+                            }
+                            pointerB.fill(); 
+                        }
+
+                        function mountain(centerX, centerY, transparency, size){
+                                var scalar = 100;
+                                var left = size+scalar;
+                                var right = size+scalar;
+                                //console.log(left +" "+ right);
+                                pointerB.fillStyle = "rgba(122,162,239, 1)";
+                                unequalFill(centerX, centerY, [size,right, size,left], 0);
+                                pointerB.fillStyle = "rgba(255,255,255,  1)";
+                                unequalFill(centerX, centerY, [size, right, size, -50], 0);
+                                pointerB.fillStyle = "rgba(0, 0, 0, " + transparency + ")";
+                                unequalFill(centerX, centerY, [size,right,size,left], 0);
+                        }
+                
+                         var count=1;
+                        //randyRando();
+                        
+                        //cover the canvas with black
+                        pointerB.fillStyle = "black";
+                        pointerB.beginPath();
+                        pointerB.rect(0, 0, window.innerWidth, window.innerHeight);
+                        pointerB.fill();
+
+                        //StarField
+                        pointerB.fillStyle = "white";
+                        for (b = 5; b >= 0; b--){
+                                let random = [Math.round(Math.random()*10)];
+                                let sides = (random-random%2)+6; 
+                                //console.log(sides);
+                                shapeOfShapes(pointerB, window.innerWidth/2, window.innerHeight*13/24, window.innerWidth/20*b, sides, 10, 10, b, 0);
+                        }
+                        
+                        function step(){
+                               
+                                   pointerB.rotate(20*Math.PI/90);     
+                        
+                        //Water
+                        //pointerB.fillStyle = "#98afd6";
+                        //pointerB.beginPath();
+                        //pointerB.rect(0, window.innerHeight*13/24, window.innerWidth, window.innerHeight);
+                        //pointerB.fill()
+                        
+                         
+                                
+                        
+                        //Mountains
+                        /*pointerB.fillStyle = "#7aa7ef";
+                        unequalFill(window.innerWidth/2, window.innerHeight*13/24, [250,300,250,300], 2);
+                        pointerB.fillStyle = "white";
+                        unequalFill(window.innerWidth/2, window.innerHeight*13/24, [250, 300, 250, -50], 2);
+                        
+
+                        pointerB.fillStyle = "#7aa7ef";
+                        unequalFill(window.innerWidth/2-100, window.innerHeight*13/24, [150,200,150,400], 0);
+                        pointerB.fillStyle = "white";
+                        unequalFill(window.innerWidth/2-100, window.innerHeight*13/24, [150, 200, 150, 0], 0);
+
+                        pointerB.fillStyle = "#7aa7ef";
+                        unequalFill(window.innerWidth/2+200, window.innerHeight*13/24, [150,150,150,150], 0);
+                        pointerB.fillStyle = "white";
+                        unequalFill(window.innerWidth/2+200, window.innerHeight*13/24, [150, 150, 150, -50], 0); */
+                       
+                        
+                                //mountain((window.innerWidth/2), window.innerHeight*13/24, 0.2, window.innerHeight/6);
+                                //mountain((window.innerWidth/2+200), window.innerHeight*13/24, 0.1, window.innerHeight/8);
+                                //mountain((window.innerWidth/2-100), window.innerHeight*13/24, 0.1, window.innerHeight/7);
+                        
+                                
+                                count++;
+                                window.requestAnimationFrame(step);
+                        }
+                       
+                        window.requestAnimationFrame(step);
+
+                });
+                /* Legacy Code: Keeping for reference or for future use */
+                function equalFill(pointer, centerX, centerY, length, nSides, rotation){
+                        var x1, y1;
+                        pointer.moveTo(centerX,centerY);
+                        var degrees = 360 / nSides;
+                        pointer.beginPath();
+                        for (j = 0; j < nSides; j++){
+                                x1 = centerX + length*Math.sin((rotation+degrees*j)*Math.PI/180);
+                                y1 = centerY - length + (length - length*Math.cos((rotation+degrees*j)*Math.PI/180));
+                                pointer.lineTo(x1,y1);
+                        }
+                        pointer.fill();
+                }
+                
+                function centerLine(pointer, x1, y1 ,x2, y2, sLength, sNSides, quantity){
+                        var colors = ["#ff6666", "#ff8c66", "#ffb366", "#ffd966", "#ffff66", "#d9ff66", "#b3ff66", "#8cff66",
+                                 "#66ff66", "#66ff8c", "#66ffb3", "#66ffd9", "#66ffff", "#66d9ff", "#66b3ff", "#668cff", "#6666ff", 
+                                 "#8c66ff", "#b366ff", "#d966ff", "#ff66ff", "#ff66d9", "#ff66b3", "#ff668c"];
+                        changeInX = (x2-x1)/quantity;
+                        changeInY = (y2-y1)/quantity;
+                        rotation = 360/quantity;
+                        for (i = 0; i < quantity; i++){
+                                if (i % 1 == 0){
+                                        //pointer.fillStyle = colors[(i+7) % colors.length];
+                                        equalFill(pointer, x1+changeInX*i, y1+changeInY*i, sLength, sNSides, rotation*i);
+                                }                                
+                        }
+                }
+
+                function shapeOfShapes(pointer, centerX, centerY, length, nSides, sLength, sNSides, quantity, rotation){
+                        var x1 = centerX + length*Math.sin(rotation*Math.PI/180);
+                        var y1 = centerY - length + (length - length*Math.cos(rotation*Math.PI/180));
+                        pointer.moveTo(x1,y1);
+                        var x2,y2;
+                        var degrees = 360 / nSides;
+                        pointer.beginPath();
+                        for (k = 1; k <= nSides; k++){
+                                x2 = centerX + Math.round(length*Math.sin((rotation+degrees*k)*Math.PI/180));
+                                y2 = centerY - length + (length - Math.round(length*Math.cos((rotation+degrees*k)*Math.PI/180)));
+                                centerLine(pointer, x1, y1, x2, y2, sLength, sNSides, quantity);
+                                x1 = x2;
+                                y1 = y2;
+                        }
+                }
+            </script>
+    </body>
+</html>
